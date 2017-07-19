@@ -1,5 +1,11 @@
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
+// link for direct use:
+// https://rawgit.com/isaacyu/bracketStuff/master/isaac.js
+// link to make above link from github
+// https://rawgit.com/
+// github link
+// https://github.com/isaacyu/bracketStuff/blob/master/isaac.js
 var isaac ={
 	// stringInsideDollar("abc","b") : false
 	// stringInsideDollar("a$b$c","b") : true
