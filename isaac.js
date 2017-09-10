@@ -1,3 +1,4 @@
+// v2
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
 // link for direct use:
@@ -11,6 +12,18 @@ var isaac ={
 	// stringInsideDollar("a$b$c","b") : true
 	// stringInsideDollar("a$bc","b") : true
 	// stringInsideDollar("a$b$c","c") : false
+	
+	isaacReplaceAfter: function (txt){
+
+		// ************************		
+		// in replaceAfter, all \begin{enumerate} have been replace by <ol>, we make the list A, B, C
+		// ************************				
+		txt = txt.replace("<ol>","<ol type='A'>");
+		
+		return txt;
+	
+	},
+
 	stringInsideDollar: function(wholeStr, partStr){
 		
 		var posOfPart = isaac.mySearch(wholeStr,partStr);
