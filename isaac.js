@@ -1,4 +1,4 @@
-// v2
+// v3
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
 // link for direct use:
@@ -12,6 +12,355 @@ var isaac ={
 	// stringInsideDollar("a$b$c","b") : true
 	// stringInsideDollar("a$bc","b") : true
 	// stringInsideDollar("a$b$c","c") : false
+	
+				
+	isaacReplaceBefore: function(txt){
+		//console.log("before replace, txt",txt);
+		
+
+		function handleUnderLineThenAnswer(){
+		
+
+			var count = 0;
+			var underlineThneAns = isaac.extract(txt,"\\underline{\\Answer{");
+			//console.log("underlineThneAns",underlineThneAns);
+			
+			// ****************************
+			// there maybe more than one \Answer
+			// ****************************
+			while (underlineThneAns != "" && count < 100){
+			
+				var isAnsInsideDollar = isaac.stringInsideDollar(txt,underlineThneAns);
+				//console.log("isAnsInsideDollar",isAnsInsideDollar);
+			
+				if (isAnsInsideDollar){
+					txt = txt.replace(underlineThneAns,"\\underline{"+"~".repeat(underlineThneAns.length)+"}");
+					
+				}else{
+				
+					txt = txt.replace(underlineThneAns,"<u>"+"&nbsp".repeat(underlineThneAns.length)+"</u>");
+				}
+				//console.log("underlineThneAns",underlineThneAns,"underlineThneAns == ''", underlineThneAns=='',"txt",txt);
+				//console.log("after replace:",txt);
+				
+				//console.log(isaac.stringInsideDollar("a$b$c","b")); //false
+				// stringInsideDollar("a$b$c","b") : true
+				// stringInsideDollar("a$bc","b") : true
+				// stringInsideDollar("a$b$c","c") : false
+				
+				
+				underlineThneAns = isaac.extract(txt,"\\underline{\\Answer{");
+				//console.log("underlineThneAns",underlineThneAns);
+				
+				count++;
+			}
+		}		
+
+		function handleAnswerWithoutUnderLine(){
+		
+
+			var count = 0;
+			var ans = isaac.extract(txt,"\\Answer{");
+			//console.log("ans",ans);
+			
+			// ****************************
+			// there maybe more than one \Answer
+			// ****************************
+			while (ans != "" && count < 100){
+			
+				var isAnsInsideDollar = isaac.stringInsideDollar(txt,ans);
+				console.log("isAnsInsideDollar",isAnsInsideDollar);
+			
+				if (isAnsInsideDollar){
+					txt = txt.replace(ans,"");
+					
+				}else{
+				
+					txt = txt.replace(ans,"");
+				}
+				//console.log("underlineThneAns",underlineThneAns,"underlineThneAns == ''", underlineThneAns=='',"txt",txt);
+				//console.log("after replace:",txt);
+				
+				//console.log(isaac.stringInsideDollar("a$b$c","b")); //false
+				// stringInsideDollar("a$b$c","b") : true
+				// stringInsideDollar("a$bc","b") : true
+				// stringInsideDollar("a$b$c","c") : false
+				
+				
+				ans = isaac.extract(txt,"\\Answer{");
+				
+				
+				count++;
+			}
+		}		
+
+
+		function replaceAllByExtract(wholeStr, startCommandStr, replaceByStr){
+		
+			var txt = wholeStr;
+			var count = 0;
+			var extract = isaac.extract(txt, startCommandStr);
+
+			console.log("before txt", txt);
+			
+			// ****************************
+			// there maybe more than one to replace
+			// ****************************
+			while (extract != "" && count < 100){
+			
+				
+				txt = txt.replace(extract ,replaceByStr);
+				extract = isaac.extract(txt, startCommandStr);
+
+				console.log("processing txt", txt);				
+
+				count++;
+			}
+
+			return txt;
+		}		
+		
+		// ****************************
+		// Some command in latex work well no matter it is inside $ $ or not, but it is not the case in Katex
+		// those command should be inside $ $
+		// this function first determine if a string is inside $ $, if it is inside $ $, replace it by newTruePartStr
+		// otherwise, replace by newFalsePartStr
+		// ****************************		
+		function conditionalReplaceAll(wholeStr, oldPartStr, newTruePartStr, newFalsePartStr){
+		
+			var txt = wholeStr;
+			var count = 0;
+			var containOldPart = (isaac.mySearch(wholeStr, oldPartStr) != -1);
+			
+			
+			while (containOldPart && count < 100){
+			
+				var isAnsInsideDollar = isaac.stringInsideDollar(wholeStr,oldPartStr);
+				console.log("isAnsInsideDollar",isAnsInsideDollar);
+			
+				if (isAnsInsideDollar){
+					txt = txt.replace(oldPartStr,newTruePartStr);
+					
+				}else{
+				
+					txt = txt.replace(oldPartStr,newFalsePartStr);
+				}
+				
+				
+				containOldPart = (isaac.mySearch(wholeStr, oldPartStr) != -1);
+			
+				
+				count++;
+			}
+
+			return txt;
+		}	
+
+		
+		// replace online comment
+		txt = replaceByParentheses(txt, '%', '%', '\n', '<!--', '-->');	
+		
+		
+		// ************************
+		// replace \underline follow by \Answer with blank charAt
+		// isaac.extract is a function that find the string enclosed by the given latex command
+		// if there are more than one command, it will give the first result
+		// ************************		
+		handleUnderLineThenAnswer();
+		
+		handleAnswerWithoutUnderLine();
+		
+		// ************************		
+		// all \begin{enumerate} will be covert to <ol>, all latex command concern list style are ignored
+		// ************************		
+		txt = txt.replace("\\renewcommand{\\theenumii}{\\Alph{enumii}}","");
+
+
+		// ************************		
+		// multic columns to nothing
+		// ************************	
+		txt = txt.replace("\\begin{multicols}{3}","");		
+		txt = txt.replace("\\begin{multicols}{2}","");
+		txt = txt.replace("\\end{multicols}","");
+	
+
+		// ************************		
+		// tick box
+		// ************************					
+		txt = conditionalReplaceAll(txt, "\\AnsBoxCheck", "\\Box", "$\\Box$");
+		txt = conditionalReplaceAll(txt, "\\AnsBox", "\\Box", "$\\Box$");
+		txt = conditionalReplaceAll(txt, "\\checkmark", "\\zzzzzzzz", "$\\zzzzzzzz$");		
+		txt = conditionalReplaceAll(txt, "\\zzzzzzzz", "\\checkmark", "$\\checkmark$");
+
+
+		// ************************		
+		// begin, end, itemize
+		// ************************
+		txt = txt.replace(/\\begin\{itemize\}([\s]+?)\\item/g,'<ul>$1<li>');
+		txt = txt.replace(/\\end\{itemize\}/g,'</li></ul>')
+
+		// ************************		
+		// table
+		// ************************
+		function getBeforeContentAfterTable(txt){
+			var tableHead = isaac.extract(txt,"\\begin{tabular}{");
+			//console.log("tableHead",tableHead);
+			//txt = replaceAllByExtract(txt, "\\begin{tabular}{", '<table style="width:100%"><tr>');
+			//txt = txt.replace(/\\\\end\{tabular\}/g, '</tr></table>');
+			var tableStart = txt.indexOf(tableHead);
+			var tableEnd = txt.indexOf("\\end{tabular}");
+			var tableContent, before, after;
+			if (tableStart != -1 && tableEnd != -1){
+				tableContent = txt.substring(tableStart, tableEnd +"\\end{tabular}".length);
+				//console.log("table detected", tableContent);
+				before = txt.substring(0,tableStart);
+				after = txt.substring(tableEnd+"\\end{tabular}".length);
+
+			}else{
+				content = "";
+				before = txt;
+				after = "";
+
+			}
+
+			var tmp= {
+				content: tableContent || "",
+				before: before || "",
+				after: after || ""				
+			};
+			
+
+			//console.log("tmp",tmp);
+			return tmp
+		}
+
+		//console.log("before txt",txt);
+		
+		var analysis = getBeforeContentAfterTable(txt);
+		var before = analysis.before,
+		tableContent = analysis.content,
+		after = analysis.after;
+
+
+		var tableHead = isaac.extract(tableContent,"\\begin{tabular}{");
+		
+		
+		// ************************		
+		// \hline in table, should be replaced before normal new line in latex table "\\"
+		// ************************	
+		//console.log("hline before content",tableContent);
+		//tableContent = tableContent.replace(/\\\\\s\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
+		tableContent = tableContent.replace(/\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
+		//console.log("hline after content",tableContent);	
+	
+	
+
+
+		
+		// ************************		
+		// latex table to html table
+		// ************************			
+		tableContent = tableContent.replace(tableHead, '<table><tr><td>');
+		tableContent = tableContent.split("&").join('</td><td>');		
+		tableContent = tableContent.split("\\\\").join('</td></tr><tr><td>');			
+		tableContent = tableContent.replace("\\end{tabular}", '</td></tr></table>');		
+		
+		function handleVertForm(){
+		
+			//***********************************************
+			
+
+			// ************************		
+			// some question are in vertical form use command \vertFormAnsBox
+			// ************************	
+			//var katexBox = "$ \\left\\lvert\\!\\rlap{\\rlap{\\qquad\\text{~~}}\\rule[-0.8ex]{1em}{0.1ex}}{\\rule[2ex]{1em}{0.1ex}}\\!\\right\\rvert $"
+			
+			// aim, to make a mulitple replace, by split and join
+			
+			// some ansBox not replaced due to new line, extra tab
+			tableContent = tableContent.replace(/\n/g,"");
+			tableContent = tableContent.replace(/\t/g,"");
+			
+
+			
+			
+			console.log("did tableContent contain any new line? index of new line ",tableContent.indexOf("\n"));
+			console.log("did tableContent contain any tab? index of tab ",tableContent.indexOf("\t"));
+			
+			// restore 0, enable the for loop
+			for(var i=0;i<10;i++){
+				//tableContent = conditionalReplaceAll(tableContent, "\\vertFormAnsBox{"+i+"}", katexBox, "$"+katexBox+"$");
+				//tableContent = tableContent.split("\\vertFormAnsBox{"+i+"} \\\\").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
+				//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
+				
+				// 
+				
+				// restore 1, by delete the next row
+				//tableContent = txt;
+				var myTmp = '<td style="border:1px solid;height:30px"></td>';
+				//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join(myTmp);
+				
+				// here, try to fix problem by regexp
+				tableContent = tableContent.replace(/<td>[\s\t]*\\vertFormAnsBox\{\d\}[\s\t]*<\/td>/g,myTmp);
+				
+				
+				//console.log("tableContent",tableContent);
+			}		
+
+			var tmpIndexOf;
+			
+
+			
+			
+			for(var i=0;i<10;i++){
+
+				tmpIndexOf = tableContent.indexOf("\\vertFormAnsBox{"+i+"}");
+				console.log("tmpIndexOf","\\vertFormAnsBox{"+i+"}",tmpIndexOf);
+				var tmpStr = tableContent.substring(tmpIndexOf);
+				console.log("tmpStr, string after",tmpStr);		
+				tmpStr = tableContent.substring(0,tmpIndexOf);
+				console.log("tmpStr, string before",tmpStr);		
+			
+				var wholeStr = "<td> \\vertFormAnsBox{"+i+"} </td>";
+				
+				for(var j=0;j<wholeStr.length;j++){
+					
+					var growthStr = wholeStr.substring(0,j),
+					growthStrBefore = wholeStr.substring(0,j-1),
+					tmpIndexOf = tableContent.indexOf(growthStr),
+					tmpIndexOfBefore = tableContent.indexOf(growthStrBefore);
+					
+					
+					if (tmpIndexOf == -1 && tmpIndexOfBefore != -1){
+					
+						console.log("cannot find", growthStr, "but can find", growthStrBefore, "in string: ",tableContent);
+					
+					}
+				
+				}
+
+			
+			}			
+
+			//**************************************************
+		}
+		
+		//handleVertForm();
+		//var myTmp = '<td style="border:1px solid;height:30px"></td>';		
+		//tableContent = tableContent.replace(/<td>[\s\t\r]*\\vertFormAnsBox\{\d\}[\s\t\r]*<\/td>/g,myTmp);
+			
+		//restore 2, , by delete the next 2 rows
+		txt = before + tableContent + after;
+		//txt = tableContent;
+		
+		
+		//console.log("after tableContent",tableContent);
+		console.log("after txt",txt);		
+
+		//console.log("after replace, txt",txt);		
+		return txt;
+	},
+
 	
 	isaacReplaceAfter: function (txt){
 
