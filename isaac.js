@@ -1,4 +1,4 @@
-// v3
+// v4
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
 // link for direct use:
@@ -199,6 +199,7 @@ var isaac ={
 		txt = txt.replace(/\\begin\{itemize\}([\s]+?)\\item/g,'<ul>$1<li>');
 		txt = txt.replace(/\\end\{itemize\}/g,'</li></ul>')
 
+/* canncel old table handle 
 		// ************************		
 		// table
 		// ************************
@@ -352,7 +353,7 @@ var isaac ={
 		//restore 2, , by delete the next 2 rows
 		txt = before + tableContent + after;
 		//txt = tableContent;
-		
+		*/
 		
 		//console.log("after tableContent",tableContent);
 		console.log("after txt",txt);		
