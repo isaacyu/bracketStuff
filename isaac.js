@@ -1,4 +1,4 @@
-// v4
+// v5: fixed bug of extract
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
 // link for direct use:
@@ -13,7 +13,7 @@ var isaac ={
 	// stringInsideDollar("a$bc","b") : true
 	// stringInsideDollar("a$b$c","c") : false
 	
-				
+
 	isaacReplaceBefore: function(txt){
 		//console.log("before replace, txt",txt);
 		
@@ -199,160 +199,160 @@ var isaac ={
 		txt = txt.replace(/\\begin\{itemize\}([\s]+?)\\item/g,'<ul>$1<li>');
 		txt = txt.replace(/\\end\{itemize\}/g,'</li></ul>')
 
-/* canncel old table handle 
-		// ************************		
-		// table
-		// ************************
-		function getBeforeContentAfterTable(txt){
-			var tableHead = isaac.extract(txt,"\\begin{tabular}{");
-			//console.log("tableHead",tableHead);
-			//txt = replaceAllByExtract(txt, "\\begin{tabular}{", '<table style="width:100%"><tr>');
-			//txt = txt.replace(/\\\\end\{tabular\}/g, '</tr></table>');
-			var tableStart = txt.indexOf(tableHead);
-			var tableEnd = txt.indexOf("\\end{tabular}");
-			var tableContent, before, after;
-			if (tableStart != -1 && tableEnd != -1){
-				tableContent = txt.substring(tableStart, tableEnd +"\\end{tabular}".length);
-				//console.log("table detected", tableContent);
-				before = txt.substring(0,tableStart);
-				after = txt.substring(tableEnd+"\\end{tabular}".length);
-
-			}else{
-				content = "";
-				before = txt;
-				after = "";
-
-			}
-
-			var tmp= {
-				content: tableContent || "",
-				before: before || "",
-				after: after || ""				
-			};
-			
-
-			//console.log("tmp",tmp);
-			return tmp
-		}
-
-		//console.log("before txt",txt);
-		
-		var analysis = getBeforeContentAfterTable(txt);
-		var before = analysis.before,
-		tableContent = analysis.content,
-		after = analysis.after;
-
-
-		var tableHead = isaac.extract(tableContent,"\\begin{tabular}{");
-		
-		
-		// ************************		
-		// \hline in table, should be replaced before normal new line in latex table "\\"
-		// ************************	
-		//console.log("hline before content",tableContent);
-		//tableContent = tableContent.replace(/\\\\\s\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
-		tableContent = tableContent.replace(/\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
-		//console.log("hline after content",tableContent);	
-	
-	
-
-
-		
-		// ************************		
-		// latex table to html table
-		// ************************			
-		tableContent = tableContent.replace(tableHead, '<table><tr><td>');
-		tableContent = tableContent.split("&").join('</td><td>');		
-		tableContent = tableContent.split("\\\\").join('</td></tr><tr><td>');			
-		tableContent = tableContent.replace("\\end{tabular}", '</td></tr></table>');		
-		
-		function handleVertForm(){
-		
-			//***********************************************
-			
-
+		/* canncel old table handle 
 			// ************************		
-			// some question are in vertical form use command \vertFormAnsBox
-			// ************************	
-			//var katexBox = "$ \\left\\lvert\\!\\rlap{\\rlap{\\qquad\\text{~~}}\\rule[-0.8ex]{1em}{0.1ex}}{\\rule[2ex]{1em}{0.1ex}}\\!\\right\\rvert $"
-			
-			// aim, to make a mulitple replace, by split and join
-			
-			// some ansBox not replaced due to new line, extra tab
-			tableContent = tableContent.replace(/\n/g,"");
-			tableContent = tableContent.replace(/\t/g,"");
-			
+			// table
+			// ************************
+			function getBeforeContentAfterTable(txt){
+				var tableHead = isaac.extract(txt,"\\begin{tabular}{");
+				//console.log("tableHead",tableHead);
+				//txt = replaceAllByExtract(txt, "\\begin{tabular}{", '<table style="width:100%"><tr>');
+				//txt = txt.replace(/\\\\end\{tabular\}/g, '</tr></table>');
+				var tableStart = txt.indexOf(tableHead);
+				var tableEnd = txt.indexOf("\\end{tabular}");
+				var tableContent, before, after;
+				if (tableStart != -1 && tableEnd != -1){
+					tableContent = txt.substring(tableStart, tableEnd +"\\end{tabular}".length);
+					//console.log("table detected", tableContent);
+					before = txt.substring(0,tableStart);
+					after = txt.substring(tableEnd+"\\end{tabular}".length);
 
-			
-			
-			console.log("did tableContent contain any new line? index of new line ",tableContent.indexOf("\n"));
-			console.log("did tableContent contain any tab? index of tab ",tableContent.indexOf("\t"));
-			
-			// restore 0, enable the for loop
-			for(var i=0;i<10;i++){
-				//tableContent = conditionalReplaceAll(tableContent, "\\vertFormAnsBox{"+i+"}", katexBox, "$"+katexBox+"$");
-				//tableContent = tableContent.split("\\vertFormAnsBox{"+i+"} \\\\").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
-				//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
-				
-				// 
-				
-				// restore 1, by delete the next row
-				//tableContent = txt;
-				var myTmp = '<td style="border:1px solid;height:30px"></td>';
-				//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join(myTmp);
-				
-				// here, try to fix problem by regexp
-				tableContent = tableContent.replace(/<td>[\s\t]*\\vertFormAnsBox\{\d\}[\s\t]*<\/td>/g,myTmp);
-				
-				
-				//console.log("tableContent",tableContent);
-			}		
+				}else{
+					content = "";
+					before = txt;
+					after = "";
 
-			var tmpIndexOf;
-			
-
-			
-			
-			for(var i=0;i<10;i++){
-
-				tmpIndexOf = tableContent.indexOf("\\vertFormAnsBox{"+i+"}");
-				console.log("tmpIndexOf","\\vertFormAnsBox{"+i+"}",tmpIndexOf);
-				var tmpStr = tableContent.substring(tmpIndexOf);
-				console.log("tmpStr, string after",tmpStr);		
-				tmpStr = tableContent.substring(0,tmpIndexOf);
-				console.log("tmpStr, string before",tmpStr);		
-			
-				var wholeStr = "<td> \\vertFormAnsBox{"+i+"} </td>";
-				
-				for(var j=0;j<wholeStr.length;j++){
-					
-					var growthStr = wholeStr.substring(0,j),
-					growthStrBefore = wholeStr.substring(0,j-1),
-					tmpIndexOf = tableContent.indexOf(growthStr),
-					tmpIndexOfBefore = tableContent.indexOf(growthStrBefore);
-					
-					
-					if (tmpIndexOf == -1 && tmpIndexOfBefore != -1){
-					
-						console.log("cannot find", growthStr, "but can find", growthStrBefore, "in string: ",tableContent);
-					
-					}
-				
 				}
 
-			
-			}			
+				var tmp= {
+					content: tableContent || "",
+					before: before || "",
+					after: after || ""				
+				};
+				
 
-			//**************************************************
-		}
-		
-		//handleVertForm();
-		//var myTmp = '<td style="border:1px solid;height:30px"></td>';		
-		//tableContent = tableContent.replace(/<td>[\s\t\r]*\\vertFormAnsBox\{\d\}[\s\t\r]*<\/td>/g,myTmp);
+				//console.log("tmp",tmp);
+				return tmp
+			}
+
+			//console.log("before txt",txt);
 			
-		//restore 2, , by delete the next 2 rows
-		txt = before + tableContent + after;
-		//txt = tableContent;
+			var analysis = getBeforeContentAfterTable(txt);
+			var before = analysis.before,
+			tableContent = analysis.content,
+			after = analysis.after;
+
+
+			var tableHead = isaac.extract(tableContent,"\\begin{tabular}{");
+			
+			
+			// ************************		
+			// \hline in table, should be replaced before normal new line in latex table "\\"
+			// ************************	
+			//console.log("hline before content",tableContent);
+			//tableContent = tableContent.replace(/\\\\\s\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
+			tableContent = tableContent.replace(/\\hline/g, '</tr><tr><td colspan="3" style="height: 1px; padding: 0px; margin: 0px;border:none;border-bottom:1.5pt solid black;"></td></tr><tr>');
+			//console.log("hline after content",tableContent);	
+		
+		
+
+
+			
+			// ************************		
+			// latex table to html table
+			// ************************			
+			tableContent = tableContent.replace(tableHead, '<table><tr><td>');
+			tableContent = tableContent.split("&").join('</td><td>');		
+			tableContent = tableContent.split("\\\\").join('</td></tr><tr><td>');			
+			tableContent = tableContent.replace("\\end{tabular}", '</td></tr></table>');		
+			
+			function handleVertForm(){
+			
+				//***********************************************
+				
+
+				// ************************		
+				// some question are in vertical form use command \vertFormAnsBox
+				// ************************	
+				//var katexBox = "$ \\left\\lvert\\!\\rlap{\\rlap{\\qquad\\text{~~}}\\rule[-0.8ex]{1em}{0.1ex}}{\\rule[2ex]{1em}{0.1ex}}\\!\\right\\rvert $"
+				
+				// aim, to make a mulitple replace, by split and join
+				
+				// some ansBox not replaced due to new line, extra tab
+				tableContent = tableContent.replace(/\n/g,"");
+				tableContent = tableContent.replace(/\t/g,"");
+				
+
+				
+				
+				console.log("did tableContent contain any new line? index of new line ",tableContent.indexOf("\n"));
+				console.log("did tableContent contain any tab? index of tab ",tableContent.indexOf("\t"));
+				
+				// restore 0, enable the for loop
+				for(var i=0;i<10;i++){
+					//tableContent = conditionalReplaceAll(tableContent, "\\vertFormAnsBox{"+i+"}", katexBox, "$"+katexBox+"$");
+					//tableContent = tableContent.split("\\vertFormAnsBox{"+i+"} \\\\").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
+					//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join('<td style="border:1px solid;height:30px"></td></tr><tr>\n');
+					
+					// 
+					
+					// restore 1, by delete the next row
+					//tableContent = txt;
+					var myTmp = '<td style="border:1px solid;height:30px"></td>';
+					//tableContent = tableContent.split("<td> \\vertFormAnsBox{"+i+"} </td>").join(myTmp);
+					
+					// here, try to fix problem by regexp
+					tableContent = tableContent.replace(/<td>[\s\t]*\\vertFormAnsBox\{\d\}[\s\t]*<\/td>/g,myTmp);
+					
+					
+					//console.log("tableContent",tableContent);
+				}		
+
+				var tmpIndexOf;
+				
+
+				
+				
+				for(var i=0;i<10;i++){
+
+					tmpIndexOf = tableContent.indexOf("\\vertFormAnsBox{"+i+"}");
+					console.log("tmpIndexOf","\\vertFormAnsBox{"+i+"}",tmpIndexOf);
+					var tmpStr = tableContent.substring(tmpIndexOf);
+					console.log("tmpStr, string after",tmpStr);		
+					tmpStr = tableContent.substring(0,tmpIndexOf);
+					console.log("tmpStr, string before",tmpStr);		
+				
+					var wholeStr = "<td> \\vertFormAnsBox{"+i+"} </td>";
+					
+					for(var j=0;j<wholeStr.length;j++){
+						
+						var growthStr = wholeStr.substring(0,j),
+						growthStrBefore = wholeStr.substring(0,j-1),
+						tmpIndexOf = tableContent.indexOf(growthStr),
+						tmpIndexOfBefore = tableContent.indexOf(growthStrBefore);
+						
+						
+						if (tmpIndexOf == -1 && tmpIndexOfBefore != -1){
+						
+							console.log("cannot find", growthStr, "but can find", growthStrBefore, "in string: ",tableContent);
+						
+						}
+					
+					}
+
+				
+				}			
+
+				//**************************************************
+			}
+			
+			//handleVertForm();
+			//var myTmp = '<td style="border:1px solid;height:30px"></td>';		
+			//tableContent = tableContent.replace(/<td>[\s\t\r]*\\vertFormAnsBox\{\d\}[\s\t\r]*<\/td>/g,myTmp);
+				
+			//restore 2, , by delete the next 2 rows
+			txt = before + tableContent + after;
+			//txt = tableContent;
 		*/
 		
 		//console.log("after tableContent",tableContent);
@@ -422,18 +422,31 @@ var isaac ={
 		//return 3;
 	},
 	
-	// function("before\\abc{def}after","\\abc{") gives "\\abc{def}"
-	extract: function(contentStr,commandStr){
 	
+
+
+	extract: function(contentStr,commandStr){
+		// v2 , 19 sep 2017, 
+		// fixed: bug of wrong return extract("{1}{abc}","{1}{") as ""
+		// fixed: extract("{1}{ab$2^{3}$c}","{1}{") give {1}{ab$2^{3}
+		// v1 pulled to sd card on 18/sep
+		// function("before\\abc{def}after","\\abc{") gives "\\abc{def}"
+	  
+
+		// restore
 		var mySearch = this.mySearch;
-		
+
 		function survayString(contentStr,singleStartStr,singleEndStr) {
+			console.log()
 			var tmp = [],levelArr = [];
 			var level = 0;
+	  
+			//console.log("30: singleStartStr:",singleStartStr,"singleEndStr",singleEndStr);
 
 			for (var i=0;i<contentStr.length;i++){
 
 				//var thisLevel
+				//console.log("35: contentStr[i]",contentStr[i],"equal start? ",contentStr[i] == singleStartStr);
 
 				if(contentStr[i] == singleStartStr){
 				  level = level +1;
@@ -451,34 +464,36 @@ var isaac ={
 				levelArr.push(level);
 
 			}
-			  
-			//alert(tmp);
 
+			//alert(tmp);
+			console.log(levelArr.join(""),"55: levelArr");
+			console.log(contentStr,"56: contentStr");
+			
 			return tmp;//JSON.stringify(tmp);//tmp.length;
 			//tmp;
-		  
+
 		}
 
 		// assume bracket pairs are {}
 		function getPosOfClosedBracket(contentStr,commandStr){
 
 			function actionIfContentContainCommand(){
-				
 
-			
+
+
 				// ************************************************************				
 				// example: 
 				// for ""adkfjoie\\Question{\\chinese{計算：}}abcd"
 				// "\Question" has level zero
 				// "{\\chinese{計算：}}" has level 1+
-				// ************************************************************	
+				//// ************************************************************	
 				var startLevel = stat[containCommandAt].level;
-				//console.log("startLevel",startLevel);
-				
+				//console.log("76: startLevel",startLevel);
+
 
 				var startSearchPos = containCommandAt + commandStr.length;
-				//console.log("startSearchPos",startSearchPos,"string before: ",contentStr.substring(0,startSearchPos-1));
-				
+				//console.log("line 75: startSearchPos",startSearchPos,"string before: ",contentStr.substring(0,startSearchPos-1));
+
 
 				// ************************************************************
 				// if the bracket happen in the middle, if the start level is 0, its position is string just before level return zero
@@ -486,13 +501,25 @@ var isaac ={
 				// if not, it should be at the end.
 				// if bracket in the middle, endPos will be set. Otherwise, endPos = -1
 				// ************************************************************
+				
+				// ************************************************************
+				// example 1
+				// 01234567
+				// 11011110
+				// {1}{abc}
+				//
+				// ************************************************************
+
 				for (var i=startSearchPos;i<stat.length-1;i++){
 
-					var thisCharIsStartLevel = stat[i].level==startLevel;
-					//console.log("thisCharIsLevelPlusOne",thisCharIsLevelPlusOne);
-
+					var thisCharIsStartLevelLessOne = stat[i].level==(startLevel-1);
+					console.log(stat[i].string,"stat[i].level",stat[i].level,"startLevel",startLevel,"thisCharIsStartLevelLessOne",thisCharIsStartLevelLessOne);
 					
-					if(stat[i-1].level==startLevel+1 && thisCharIsStartLevel){
+					var previousCharEqualStart = stat[i-1].level==startLevel;
+					console.log("previousCharEqualStart",previousCharEqualStart);
+					
+
+					if(previousCharEqualStart && thisCharIsStartLevelLessOne){
 					  endPos=i;
 					  break;
 					}
@@ -503,16 +530,19 @@ var isaac ={
 
 				// now, endPos = -1, either the string is ill formed or the bracket is at the end
 				if (endPos==-1){
-					var levelCorrect = stat[contentStr.length-1].level == startLevel;
-
+					var levelCorrect = stat[contentStr.length-2].level == startLevel;
+					console.log( "contentStr.length",contentStr.length,"contentStr",contentStr);
+					console.log( "stat[contentStr.length-1].level",stat[contentStr.length-1].level,"startLevel",startLevel)
 					var lastCharIsCorrect = contentStr[contentStr.length-1] == "}";
+					
+					console.log("levelCorrect",levelCorrect);
 
 					if (levelCorrect && lastCharIsCorrect){
-					  
+
 						endPos = contentStr.length-1;
 
 						return endPos;
-					  
+
 					}
 					/*   
 					if (levelCorrect && (!lastCharIsCorrect)){
@@ -522,41 +552,42 @@ var isaac ={
 					}
 					*/  
 				}
-				
+
 			}
-		  
-			//console.log("contentStr", contentStr, "commandStr", commandStr);
+
+			//console.log("123: contentStr", contentStr, "commandStr", commandStr);
 
 			var stat = survayString(contentStr,"{","}");
-			//console.log("stat",JSON.stringify(stat).split(",").join("\n"));
+			//console.log("126: stat",JSON.stringify(stat).split(",").join("\n"));
 
 			var containCommandAt = mySearch(contentStr,commandStr);
 			//contentStr.search(commandStr);
 			//console.log("containCommandAt",containCommandAt);
 
-			
+
 			var endPos=-1;
 
 			var isContentContainCommand = (containCommandAt != -1);
-			
+
 			if (isContentContainCommand){
-			
+
 				actionIfContentContainCommand();	
-				
+
 			}
 
-			
+
 
 
 			return endPos;
 			//return containCommandAt;
 			//return stat.length;
-		  
+
 		}
+		
 
 		var end = getPosOfClosedBracket(contentStr,commandStr);
 
-		//onsole.log("end",end);
+		console.log("end",end);
 
 		var start = mySearch(contentStr,commandStr);
 
@@ -564,7 +595,13 @@ var isaac ={
 
 		return tmp;
 
-	},
+	}
 
+		//var tmp = 
+		//extract("abc{1}{ab$2^{23}$c}abc","{1}{");
+		//extract("{1}{ab$2^{3}$c}","{1}{");
+
+		//console.log("tmp",tmp);
+	
 
 }
