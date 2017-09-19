@@ -357,7 +357,7 @@ var isaac ={
 		*/
 		
 		//console.log("after tableContent",tableContent);
-		console.log("after txt",txt);		
+		//console.log("after txt",txt);		
 
 		//console.log("after replace, txt",txt);		
 		return txt;
