@@ -1,3 +1,4 @@
+// v6: disable console
 // v5: fixed bug of extract
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
@@ -466,8 +467,8 @@ var isaac ={
 			}
 
 			//alert(tmp);
-			console.log(levelArr.join(""),"55: levelArr");
-			console.log(contentStr,"56: contentStr");
+			//console.log(levelArr.join(""),"55: levelArr");
+			//console.log(contentStr,"56: contentStr");
 			
 			return tmp;//JSON.stringify(tmp);//tmp.length;
 			//tmp;
@@ -513,10 +514,10 @@ var isaac ={
 				for (var i=startSearchPos;i<stat.length-1;i++){
 
 					var thisCharIsStartLevelLessOne = stat[i].level==(startLevel-1);
-					console.log(stat[i].string,"stat[i].level",stat[i].level,"startLevel",startLevel,"thisCharIsStartLevelLessOne",thisCharIsStartLevelLessOne);
+					//console.log(stat[i].string,"stat[i].level",stat[i].level,"startLevel",startLevel,"thisCharIsStartLevelLessOne",thisCharIsStartLevelLessOne);
 					
 					var previousCharEqualStart = stat[i-1].level==startLevel;
-					console.log("previousCharEqualStart",previousCharEqualStart);
+					//console.log("previousCharEqualStart",previousCharEqualStart);
 					
 
 					if(previousCharEqualStart && thisCharIsStartLevelLessOne){
@@ -587,7 +588,7 @@ var isaac ={
 
 		var end = getPosOfClosedBracket(contentStr,commandStr);
 
-		console.log("end",end);
+		//console.log("end",end);
 
 		var start = mySearch(contentStr,commandStr);
 
