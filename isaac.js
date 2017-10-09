@@ -1,3 +1,4 @@
+// v8: connect getRandomExampleOf
 // v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
 // v5: fixed bug of extract
@@ -706,7 +707,7 @@ var isaac ={
 				var i = cmdArr.indexOf(cmdStr);
 				txt = contentArr[i];
 
-
+				var getRandomExampleOf = isaac.getRandomExampleOf;
 
 				try{
 					// "abc{1}".search("{1"); no error,
