@@ -1,3 +1,4 @@
+// v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
 // v5: fixed bug of extract
 // uploaded to github for jsfiddle use on 19/Jul/2017
@@ -596,13 +597,136 @@ var isaac ={
 
 		return tmp;
 
-	}
+	},
 
-		//var tmp = 
-		//extract("abc{1}{ab$2^{23}$c}abc","{1}{");
-		//extract("{1}{ab$2^{3}$c}","{1}{");
+	getRandomExampleOf: function(txt){
+			function getPureQuestionContent(txt){
+				// in latex paspaper file, each questions are stored in command
+				// with some non usefule content.
+				// this function find th unuseful part and cut them.
+				//console.log("line 17:",txt);
+				//console.log("line 17:",getRandomExampleOf","txt.length",txt.length);
+				//console.log("breakPastpaperContent",br  eakPastpaperContent);
 
-		//console.log("tmp",tmp);
+				var tmp = txt;
+				var cutIndex2 = tmp.search("setcounter");
+				//console.log("cutIndex2",cutIndex2);
+
+				tmp = tmp.substring(0,cutIndex2-3) + "}";
+
+				//console.log("tmp",tmp);
+				return tmp;
+			}
+		  
+			txt = getPureQuestionContent(txt);
+
+			//console.log("txt before",txt);
+		  
+			function numOfQuestInLatex(txt){
+				var count=0;
+				var minNotExist = 10000,
+				maxExist = 0;
+
+				//console.log("40");
+				//console.log("minNotExist == maxExist+1",minNotExist == maxExist+1);
+
+				while (minNotExist != maxExist+1){
+					var mid = Math.round((minNotExist+maxExist)/2);
+
+					var exist = (isaac.extract(txt,"{"+mid+"}{") !="");
+					//console.log("43: isaac.extract(txt,'{'"+mid+"}{)'", isaac.extract(txt,"{"+mid+"}{"));
+
+					//console.log("exist",exist);
+
+					if (exist){
+
+						maxExist = mid;
+
+					}else{
+						minNotExist = mid;
+
+					}
+					//console.log("55");  
+					//console.log("58: minNotExist",minNotExist,"maxExist",maxExist,"minNotExist != maxExist+1",minNotExist != maxExist+1);      
+				}
+				//console.log("maxExist",maxExist);
+				
+				return maxExist;
+			}
+
+
+			//console.log("57");
+			var n = numOfQuestInLatex(txt);
+			//console.log("59");  
+
+			var rnd = Math.round(Math.random()*n)+1;
+
+			txt = isaac.extract(txt,"{"+rnd+"}{");
+			//isaac.extract("before\\abc{def}after","\\abc{");
+			//"hello";  
+			//console.log("txt after",txt);
+
+			return txt;
+			
+		},
+		
+	handleSingleCmd: function(txt){
+
+			var tmp = breakPastPaper.parse(pastPaper);
+
+			var cmdArr = [], contentArr = [];
+
+			//console.log("hi");
+
+			for (var i=0;i<tmp.length;i++){
+
+				cmdArr.push(tmp[i].command);
+				contentArr.push(tmp[i].content);
+
+			}
+
+			//console.log("parised ",tmp[0].command);
+
+			//console.log("txt ",txt);      
+
+			// e.g. \SolveQudraticByFactoringEasy
+
+			var cmdStr = "";
+
+			try{
+				cmdStr=getCommand.parse(txt);
+			}catch(err) {}
+
+
+			//console.log("cmd",cmdStr);
+
+			if (cmdArr.indexOf(cmdStr)!=-1){        
+
+				//console.log("command detected");
+				var i = cmdArr.indexOf(cmdStr);
+				txt = contentArr[i];
+
+
+
+				try{
+					// "abc{1}".search("{1"); no error,
+					// but // "abc{1}".search("{1}"); error
+					var cutIndex = txt.search("{1"); 
+
+
+					//console.log("cutIndex",cutIndex);
+					txt = txt.substring(cutIndex);
+
+					txt = getRandomExampleOf(txt);
+
+				}catch(err){}
+			       
+			}
+
+			return txt;
+		};
+
+
 	
 
 }
