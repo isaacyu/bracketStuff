@@ -1,4 +1,4 @@
-// v8.2: connect getRandomExampleOf
+// v8.3: connect getRandomExampleOf
 // v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
 // v5: fixed bug of extract
@@ -600,6 +600,7 @@ var isaac ={
 
 	},
 
+	// this should be an internal function of handleSingleCmd. This function find the correcsponding text that stored in the latex command and randomly pick an example from it.
 	getRandomExampleOf: function(txt){
 			function getPureQuestionContent(txt){
 				// in latex paspaper file, each questions are stored in command
@@ -670,7 +671,7 @@ var isaac ={
 			return txt;
 			
 		},
-		
+	// If the string is a latex command, than it probably is a command in questions bank. This function return an example randomly from question bank.	
 	handleSingleCmd: function(txt){
 
 			var tmp = breakPastPaper.parse(pastPaper);
