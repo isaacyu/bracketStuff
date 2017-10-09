@@ -1,4 +1,4 @@
-// v8.1: connect getRandomExampleOf
+// v8.2: connect getRandomExampleOf
 // v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
 // v5: fixed bug of extract
@@ -534,11 +534,11 @@ var isaac ={
 				// now, endPos = -1, either the string is ill formed or the bracket is at the end
 				if (endPos==-1){
 					var levelCorrect = stat[contentStr.length-2].level == startLevel;
-					console.log( "contentStr.length",contentStr.length,"contentStr",contentStr);
-					console.log( "stat[contentStr.length-1].level",stat[contentStr.length-1].level,"startLevel",startLevel)
+					//console.log( "contentStr.length",contentStr.length,"contentStr",contentStr);
+					//console.log( "stat[contentStr.length-1].level",stat[contentStr.length-1].level,"startLevel",startLevel)
 					var lastCharIsCorrect = contentStr[contentStr.length-1] == "}";
 					
-					console.log("levelCorrect",levelCorrect);
+					//console.log("levelCorrect",levelCorrect);
 
 					if (levelCorrect && lastCharIsCorrect){
 
