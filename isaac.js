@@ -1,4 +1,4 @@
-// v8: connect getRandomExampleOf
+// v8.1: connect getRandomExampleOf
 // v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
 // v5: fixed bug of extract
@@ -725,7 +725,7 @@ var isaac ={
 			}
 
 			return txt;
-		};
+		}
 
 
 	
