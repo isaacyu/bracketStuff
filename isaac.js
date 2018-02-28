@@ -1,3 +1,5 @@
+// v9: (on going)
+// change extract with flexibility that it can extract between [], (), but not just
 // v8.3: connect getRandomExampleOf
 // v7: added two functions: handleSingleCmd, getRandomExampleOf
 // v6: disable console
@@ -559,8 +561,24 @@ var isaac ={
 			}
 
 			//console.log("123: contentStr", contentStr, "commandStr", commandStr);
-
-			var stat = survayString(contentStr,"{","}");
+			
+			var lastCharOfCommand = commandStr.substring(commandStr.length-1);
+			
+			console.log("in github js, commandStr", commandStr, "lastCharOfCommand",lastCharOfCommand);
+			
+			var startBracket = "{", endBracket = "}";
+			
+			if (lastCharOfCommand === "("){
+				startBracket = "(";
+				endBracket = ")";
+			}
+			
+			if (lastCharOfCommand === "["){
+				startBracket = "[";
+				endBracket = "]";
+			}
+			
+			var stat = survayString(contentStr,startBracket, endBracket);
 			//console.log("126: stat",JSON.stringify(stat).split(",").join("\n"));
 
 			var containCommandAt = mySearch(contentStr,commandStr);
