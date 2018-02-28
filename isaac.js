@@ -564,7 +564,7 @@ var isaac ={
 			
 			var lastCharOfCommand = commandStr.substring(commandStr.length-1);
 			
-			console.log("in github js, commandStr", commandStr, "lastCharOfCommand",lastCharOfCommand);
+			//console.log("in github js, commandStr", commandStr, "lastCharOfCommand",lastCharOfCommand);
 			
 			var startBracket = "{", endBracket = "}";
 			
