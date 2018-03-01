@@ -1,3 +1,4 @@
+// v10.1: fixed bug of "["
 // v10: add function strRemoveFrom
 // v9: change extract with flexibility that it can extract between [], (), but not just
 // v8.3: connect getRandomExampleOf
@@ -13,27 +14,52 @@
 // github link
 // https://github.com/isaacyu/bracketStuff/blob/master/isaac.js
 var isaac ={
-	strRemoveFrom: function(removeStr,fromStr){
+      strRemoveFrom : function(removeStr,fromStr){
           
           var tmp = removeStr;
           var inputStr = fromStr;
         
-          var startInd = inputStr.search(tmp);
-          //console.log("startInd",startInd);
-          var beforeStr = inputStr.substring(0,startInd-1)
-          //console.log("beforeStr",beforeStr);
-          var afterStartInd = 
+          console.log(tmp.substring(0,1)==="[");
+        
+          var startInd;
+          var beforeStr, afterStartInd,afterStr;
+        
+          if (tmp.substring(0,1)==="["){
+            tmp = "\\["+tmp.substring(1);
+            
+            startInd = inputStr.search(tmp);
+            console.log("startInd",startInd);
+            beforeStr = inputStr.substring(0,startInd);
+            
+            console.log("beforeStr",beforeStr);
+            afterStartInd = 
             // 8;
             // = 4 + 4;
             startInd + tmp.length -1 ;
-          var afterStr = inputStr.substring(afterStartInd);
-          //console.log("afterStr",afterStr);
-          var excludedStr = beforeStr + afterStr;
-          //console.log("excludedStr",excludedStr);
+            afterStr = inputStr.substring(afterStartInd);
+            console.log("afterStr",afterStr);            
+        
+          }else{
+  
+            startInd = inputStr.search(tmp);
+            console.log("startInd",startInd);
+            beforeStr = inputStr.substring(0,startInd);           
+            
+            console.log("beforeStr",beforeStr);
+            afterStartInd = 
+            // 8;
+            // = 4 + 4;
+            startInd + tmp.length -1 ;
+            afterStr = inputStr.substring(afterStartInd+1);
+            console.log("afterStr",afterStr);
+          }
+	  
+	  var excludedStr = beforeStr + afterStr;
+          console.log("excludedStr",excludedStr);
           
           return excludedStr;
           
-        },
+        };
 	
 	// stringInsideDollar("abc","b") : false
 	// stringInsideDollar("a$b$c","b") : true
