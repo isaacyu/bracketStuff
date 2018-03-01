@@ -19,7 +19,7 @@ var isaac ={
           var tmp = removeStr;
           var inputStr = fromStr;
         
-          console.log(tmp.substring(0,1)==="[");
+          //console.log(tmp.substring(0,1)==="[");
         
           var startInd;
           var beforeStr, afterStartInd,afterStr;
@@ -28,34 +28,34 @@ var isaac ={
             tmp = "\\["+tmp.substring(1);
             
             startInd = inputStr.search(tmp);
-            console.log("startInd",startInd);
+            //console.log("startInd",startInd);
             beforeStr = inputStr.substring(0,startInd);
             
-            console.log("beforeStr",beforeStr);
+            //console.log("beforeStr",beforeStr);
             afterStartInd = 
             // 8;
             // = 4 + 4;
             startInd + tmp.length -1 ;
             afterStr = inputStr.substring(afterStartInd);
-            console.log("afterStr",afterStr);            
+            //console.log("afterStr",afterStr);            
         
           }else{
   
             startInd = inputStr.search(tmp);
-            console.log("startInd",startInd);
+            //console.log("startInd",startInd);
             beforeStr = inputStr.substring(0,startInd);           
             
-            console.log("beforeStr",beforeStr);
+            //console.log("beforeStr",beforeStr);
             afterStartInd = 
             // 8;
             // = 4 + 4;
             startInd + tmp.length -1 ;
             afterStr = inputStr.substring(afterStartInd+1);
-            console.log("afterStr",afterStr);
+            //console.log("afterStr",afterStr);
           }
 	  
 	  var excludedStr = beforeStr + afterStr;
-          console.log("excludedStr",excludedStr);
+          //console.log("excludedStr",excludedStr);
           
           return excludedStr;
           
