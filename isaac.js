@@ -1,4 +1,4 @@
-// v10.1: fixed bug of "["
+// v10.2: fixed bug of "["
 // v10: add function strRemoveFrom
 // v9: change extract with flexibility that it can extract between [], (), but not just
 // v8.3: connect getRandomExampleOf
@@ -59,7 +59,7 @@ var isaac ={
           
           return excludedStr;
           
-        };
+        },
 	
 	// stringInsideDollar("abc","b") : false
 	// stringInsideDollar("a$b$c","b") : true
