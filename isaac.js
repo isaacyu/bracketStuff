@@ -1,4 +1,4 @@
-// v10.2: fixed bug of "["
+// v10.3: fixed bug of "["
 // v10: add function strRemoveFrom
 // v9: change extract with flexibility that it can extract between [], (), but not just
 // v8.3: connect getRandomExampleOf
@@ -28,16 +28,16 @@ var isaac ={
             tmp = "\\["+tmp.substring(1);
             
             startInd = inputStr.search(tmp);
-            //console.log("startInd",startInd);
+            console.log("startInd",startInd);
             beforeStr = inputStr.substring(0,startInd);
             
-            //console.log("beforeStr",beforeStr);
+            console.log("beforeStr",beforeStr);
             afterStartInd = 
             // 8;
             // = 4 + 4;
             startInd + tmp.length -1 ;
             afterStr = inputStr.substring(afterStartInd);
-            //console.log("afterStr",afterStr);            
+            console.log("afterStr",afterStr);            
         
           }else{
   
@@ -55,7 +55,7 @@ var isaac ={
           }
 	  
 	  var excludedStr = beforeStr + afterStr;
-          //console.log("excludedStr",excludedStr);
+          console.log("excludedStr",excludedStr);
           
           return excludedStr;
           
