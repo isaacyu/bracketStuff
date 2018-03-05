@@ -1,4 +1,4 @@
-// v10.4: fixed bug of "["
+// v10.5: fixed bug of "["
 // v10: add function strRemoveFrom
 // v9: change extract with flexibility that it can extract between [], (), but not just
 // v8.3: connect getRandomExampleOf
@@ -60,6 +60,42 @@ var isaac ={
           return excludedStr;
           
         },
+	
+	// ambitious to:
+	// return an array, each member contain two attr
+        // 1) extracted string 2) index
+        // it will be sort later
+	// example      
+        //              012345678901234567890 
+        //var fromStr = "abc[123]def[e457]ngj";
+	/*     
+        function getInsideBracketArray(fromStr,startBracket){
+          var tmp = [];
+          var insideBracket = isaac.extract(fromStr,startBracket);
+          
+          console.log("insideBracket",insideBracket);
+          
+          while (insideBracket !== ""){
+            
+            tmp.push({
+              index:fromStr.search(insideBracket),
+              str:insideBracket
+            });
+            
+            fromStr = isaac.strRemoveFrom(insideBracket,fromStr);
+            
+            console.log("removed = fromStr",fromStr);
+            
+            
+            insideBracket = isaac.extract(fromStr,startBracket);
+            console.log("insideBracket",insideBracket);
+          }
+          
+          return tmp;
+          
+        },*/
+	
+	
 	
 	// stringInsideDollar("abc","b") : false
 	// stringInsideDollar("a$b$c","b") : true
