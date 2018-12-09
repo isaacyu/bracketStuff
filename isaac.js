@@ -8,7 +8,7 @@
 // uploaded to github for jsfiddle use on 19/Jul/2017
 // most updated file kept on google drive\jsApp2\Katex
 // link for direct use:
-// https://rawgit.com/isaacyu/bracketStuff/master/isaac.js
+// https://cdn.jsdelivr.net/gh/isaacyu/bracketStuff@master/isaac.js
 // link to make above link from github
 // https://rawgit.com/
 // github link

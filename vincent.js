@@ -1,5 +1,5 @@
 // link for direct use:
-//    https://rawgit.com/isaacyu/katex-translate/master/vincent.js
+//    https://cdn.jsdelivr.net/gh/isaacyu/katex-translate@master/vincent.js
 // link to make above link from github
 //    https://rawgit.com/
 // github link
